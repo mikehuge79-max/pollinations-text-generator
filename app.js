@@ -234,3 +234,29 @@ generateBtn.addEventListener('click', generateText);
 document.addEventListener('keydown', e => {
   if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && !generateBtn.disabled) generateText();
 });
+
+// ── Copy to clipboard ───────────────────────────────────
+copyBtn.addEventListener('click', async () => {
+  const text = textOutput.textContent;
+  if (!text) return;
+
+  try {
+    await navigator.clipboard.writeText(text);
+    const original = copyBtn.textContent;
+    copyBtn.textContent = '✅ Copied!';
+    copyBtn.style.color = 'var(--clr-accent)';
+    setTimeout(() => { copyBtn.textContent = original; copyBtn.style.color = ''; }, 2000);
+  } catch {
+    // Fallback for browsers that restrict clipboard
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity  = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    copyBtn.textContent = '✅ Copied!';
+    setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 2000);
+  }
+});
