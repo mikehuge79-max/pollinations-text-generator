@@ -168,3 +168,34 @@ function buildSystemPrompt(wordCount, tone, language) {
     `Format with proper paragraphs. Use markdown headings only if the content genuinely benefits from structure.`,
   ].join(' ');
 }
+
+// ── Call Pollinations text API ─────────────────────────
+async function callPollinationsText({ model, systemPrompt, userPrompt, apiKey }) {
+  const response = await fetch('https://text.pollinations.ai/openai', {
+    method: 'POST',
+    headers: {
+      'Content-Type':  'application/json',
+      'Authorization': `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user',   content: userPrompt   },
+      ],
+      temperature: 0.75,
+    }),
+  });
+
+  if (!response.ok) {
+    const body = await response.text();
+    let detail = '';
+    try { detail = JSON.parse(body)?.error?.message || body; } catch { detail = body; }
+    throw new Error(`API error ${response.status}: ${detail || response.statusText}`);
+  }
+
+  const data = await response.json();
+  const content = data?.choices?.[0]?.message?.content;
+  if (!content) throw new Error('Empty response from API. Please try again.');
+  return content;
+}
