@@ -112,3 +112,52 @@ label {
   border-radius: var(--radius-sm);
 }
 .btn-icon:hover { color: var(--clr-accent); border-color: var(--clr-accent); }
+
+/* ── Setup Screen ── */
+.setup-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: radial-gradient(ellipse at 50% 0%, #0d2b1e 0%, var(--clr-bg) 65%);
+}
+
+.setup-card {
+  background: var(--clr-card);
+  border: 1px solid var(--clr-border);
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  max-width: 440px;
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+.setup-logo { font-size: 3rem; margin-bottom: 1rem; }
+
+.setup-card h1 {
+  font-size: 1.5rem;
+  margin-bottom: .5rem;
+  background: linear-gradient(135deg, var(--clr-accent), var(--clr-accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.setup-card p { color: var(--clr-muted); font-size: .88rem; margin-bottom: 1.5rem; }
+
+.setup-input-row { display: flex; gap: .5rem; margin-bottom: 1rem; }
+.setup-input-row input { flex: 1; }
+.setup-input-row button {
+  background: linear-gradient(135deg, var(--clr-accent), var(--clr-accent2));
+  color: #0d0d14;
+  padding: .55rem 1.1rem;
+  font-weight: 700;
+  white-space: nowrap;
+  border-radius: var(--radius-sm);
+}
+.setup-input-row button:hover { opacity: .9; }
+
+.setup-hint  { font-size: .74rem; color: var(--clr-muted); }
+.setup-link  { display: inline-block; margin-top: 1.25rem; font-size: .85rem; }
