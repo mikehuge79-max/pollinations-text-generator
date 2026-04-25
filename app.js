@@ -118,3 +118,38 @@ TONE_PRESETS.forEach(tone => {
   });
   tonePresetsEl.appendChild(chip);
 });
+
+// ── DOM: output ─────────────────────────────────────────
+const placeholder   = document.getElementById('placeholder');
+const loadingBox    = document.getElementById('loading-box');
+const textResult    = document.getElementById('text-result');
+const textOutput    = document.getElementById('text-output');
+const wordCounter   = document.getElementById('word-counter');
+const errorBox      = document.getElementById('error-box');
+const errorMsg      = document.getElementById('error-msg');
+const copyBtn       = document.getElementById('copy-btn');
+const downloadBtn   = document.getElementById('download-btn');
+
+function showOutput(state) {
+  placeholder.classList.toggle('hidden', state !== 'placeholder');
+  loadingBox.classList.toggle('hidden',  state !== 'loading');
+  textResult.classList.toggle('hidden',  state !== 'text');
+  errorBox.classList.toggle('hidden',    state !== 'error');
+}
+
+function showError(msg) {
+  errorMsg.textContent = msg;
+  showOutput('error');
+}
+
+function setLoading(active) {
+  generateBtn.disabled = active;
+  btnText.classList.toggle('hidden', active);
+  btnLoading.classList.toggle('hidden', !active);
+}
+
+function updateWordCounter(text) {
+  const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+  const chars = text.length;
+  wordCounter.textContent = `${words.toLocaleString()} words · ${chars.toLocaleString()} chars`;
+}
