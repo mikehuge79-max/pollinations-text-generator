@@ -233,3 +233,71 @@ label {
   .app-body { grid-template-columns: 1fr; }
   .controls-panel { max-height: none; position: static; border-right: none; border-bottom: 1px solid var(--clr-border); }
 }
+
+/* ── Output Panel ── */
+.placeholder {
+  text-align: center;
+  color: var(--clr-muted);
+  padding: 4rem 2rem;
+  border: 2px dashed var(--clr-border);
+  border-radius: var(--radius);
+  flex: 1;
+}
+.placeholder-icon { font-size: 3rem; margin-bottom: .75rem; }
+
+.loading-box { text-align: center; color: var(--clr-muted); padding: 3rem; }
+.spinner {
+  width: 44px; height: 44px;
+  border: 3px solid var(--clr-border);
+  border-top-color: var(--clr-accent);
+  border-radius: 50%;
+  animation: spin .75s linear infinite;
+  margin: 0 auto 1rem;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.text-result { display: flex; flex-direction: column; gap: .75rem; }
+
+.text-output-box {
+  background: var(--clr-card);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  white-space: pre-wrap;
+  line-height: 1.75;
+  font-size: .95rem;
+  max-height: 60vh;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.text-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: .76rem;
+  color: var(--clr-muted);
+}
+
+.text-actions { display: flex; gap: .6rem; }
+
+.error-box {
+  background: rgba(248,113,113,.08);
+  border: 1px solid var(--clr-error);
+  color: var(--clr-error);
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-sm);
+  text-align: center;
+}
+
+/* Typing cursor animation */
+.cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: var(--clr-accent);
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: blink .8s step-end infinite;
+}
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
