@@ -72,3 +72,49 @@ resetKeyBtn.addEventListener('click', () => { clearApiKey(); showSetupScreen(); 
   const key = loadApiKey();
   if (key) showMainApp(key); else showSetupScreen();
 })();
+
+// ── DOM: form controls ──────────────────────────────────
+const promptInput   = document.getElementById('prompt');
+const modelSelect   = document.getElementById('model');
+const wordCountInput = document.getElementById('word-count');
+const toneInput     = document.getElementById('tone');
+const languageInput = document.getElementById('language');
+const generateBtn   = document.getElementById('generate-btn');
+const btnText       = document.getElementById('btn-text');
+const btnLoading    = document.getElementById('btn-loading');
+
+// ── Tone preset chips ───────────────────────────────────
+const TONE_PRESETS = [
+  'Professional', 'Casual', 'Formal', 'Friendly',
+  'Persuasive', 'Academic', 'Humorous', 'Poetic',
+  'Technical', 'Inspirational',
+];
+
+const tonePresetsEl = document.getElementById('tone-presets');
+
+TONE_PRESETS.forEach(tone => {
+  const chip = document.createElement('button');
+  chip.type = 'button';
+  chip.textContent = tone;
+  chip.style.cssText = `
+    background: var(--clr-bg);
+    border: 1px solid var(--clr-border);
+    color: var(--clr-muted);
+    padding: .25rem .65rem;
+    font-size: .75rem;
+    border-radius: 99px;
+    cursor: pointer;
+    transition: .15s;
+  `;
+  chip.addEventListener('mouseenter', () => { chip.style.borderColor = 'var(--clr-accent)'; chip.style.color = 'var(--clr-accent)'; });
+  chip.addEventListener('mouseleave', () => { chip.style.borderColor = 'var(--clr-border)'; chip.style.color = 'var(--clr-muted)'; });
+  chip.addEventListener('click', () => {
+    toneInput.value = tone.toLowerCase();
+    // Highlight active chip
+    tonePresetsEl.querySelectorAll('button').forEach(b => { b.style.background = 'var(--clr-bg)'; });
+    chip.style.background = 'rgba(52,211,153,.12)';
+    chip.style.borderColor = 'var(--clr-accent)';
+    chip.style.color = 'var(--clr-accent)';
+  });
+  tonePresetsEl.appendChild(chip);
+});
