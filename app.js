@@ -153,3 +153,18 @@ function updateWordCounter(text) {
   const chars = text.length;
   wordCounter.textContent = `${words.toLocaleString()} words · ${chars.toLocaleString()} chars`;
 }
+
+// ── Build system prompt ─────────────────────────────────
+function buildSystemPrompt(wordCount, tone, language) {
+  const lang     = language?.trim() || 'English';
+  const toneText = tone?.trim()     || 'professional';
+
+  return [
+    `You are a professional ${toneText} writer.`,
+    `Write all responses in ${lang}.`,
+    `Target length: approximately ${wordCount} words.`,
+    `Tone: ${toneText}.`,
+    `Produce only the final written content — no meta-commentary, no "Here is your text:", no quotation marks around the output.`,
+    `Format with proper paragraphs. Use markdown headings only if the content genuinely benefits from structure.`,
+  ].join(' ');
+}
