@@ -314,3 +314,83 @@ promptInput.addEventListener('input', () => {
   charCounter.style.color = l > 700 ? 'var(--clr-error)' : 'var(--clr-muted)';
 });
 charCounter.textContent = '0 / 800';
+
+// ── Typewriter display effect ───────────────────────────
+/**
+ * Renders text progressively with a blinking cursor.
+ * Falls back to instant display if text is very long (>3000 chars).
+ */
+async function typewriterDisplay(text, targetEl) {
+  targetEl.textContent = '';
+
+  const cursor = document.createElement('span');
+  cursor.className = 'cursor';
+  targetEl.appendChild(cursor);
+
+  // Skip animation for very long texts (performance)
+  if (text.length > 3000) {
+    targetEl.textContent = text;
+    updateWordCounter(text);
+    return;
+  }
+
+  const CHUNK = 6;  // characters per frame
+  let i = 0;
+
+  await new Promise(resolve => {
+    function step() {
+      if (i < text.length) {
+        const chunk = text.slice(0, i + CHUNK);
+        targetEl.textContent = chunk;
+        targetEl.appendChild(cursor);
+        updateWordCounter(chunk);
+        i += CHUNK;
+        requestAnimationFrame(step);
+      } else {
+        cursor.remove();
+        targetEl.textContent = text;
+        updateWordCounter(text);
+        resolve();
+      }
+    }
+    requestAnimationFrame(step);
+  });
+}
+
+// Patch generateText to use typewriter
+const _origGenerate = generateText;
+// Override: re-define generateText to use typewriter on success
+async function generateTextAnimated() {
+  const prompt    = promptInput.value.trim();
+  const wordCount = parseInt(wordCountInput.value) || 300;
+  const tone      = toneInput.value.trim()      || 'professional';
+  const language  = languageInput.value.trim()  || 'English';
+  const model     = modelSelect.value;
+
+  if (!prompt) { showError('Please enter a prompt before generating.'); return; }
+
+  const apiKey = loadApiKey();
+  if (!apiKey) { clearApiKey(); showSetupScreen(); return; }
+
+  setLoading(true);
+  showOutput('loading');
+
+  try {
+    const systemPrompt = buildSystemPrompt(wordCount, tone, language);
+    const text = await callPollinationsText({ model, systemPrompt, userPrompt: prompt, apiKey });
+    showOutput('text');
+    await typewriterDisplay(text, textOutput);
+  } catch (err) {
+    showError(err.message);
+  } finally {
+    setLoading(false);
+  }
+}
+
+// Replace click handler
+generateBtn.removeEventListener('click', generateText);
+generateBtn.addEventListener('click', generateTextAnimated);
+document.removeEventListener('keydown', e => {});
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && !generateBtn.disabled) generateTextAnimated();
+});
