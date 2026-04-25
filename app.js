@@ -278,3 +278,39 @@ downloadBtn.addEventListener('click', () => {
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 });
+
+// ── Model descriptions ──────────────────────────────────
+const MODEL_INFO = {
+  'openai':     'GPT-4o by OpenAI — industry-leading quality for all writing tasks.',
+  'claude':     'Claude 3.5 Sonnet — nuanced, thoughtful writing with great style.',
+  'gemini':     'Gemini 2.0 Flash — fast, creative, great for varied content.',
+  'mistral':    'Mistral — concise, clean, efficient European LLM.',
+  'llama':      'LLaMA — Meta\'s open-source model, solid general performance.',
+  'command-r':  'Command R — optimized for instruction-following and RAG.',
+};
+
+const modelInfo = document.createElement('p');
+modelInfo.style.cssText = 'font-size:.74rem;color:var(--clr-muted);margin-top:.35rem;min-height:1.1em;';
+modelSelect.parentElement.appendChild(modelInfo);
+
+function updateModelInfo() { modelInfo.textContent = MODEL_INFO[modelSelect.value] || ''; }
+modelSelect.addEventListener('change', updateModelInfo);
+updateModelInfo();
+
+// ── Word count validation ───────────────────────────────
+wordCountInput.addEventListener('blur', () => {
+  let v = parseInt(wordCountInput.value) || 300;
+  v = Math.max(50, Math.min(3000, v));
+  wordCountInput.value = v;
+});
+
+// ── Prompt character counter ────────────────────────────
+const charCounter = document.createElement('small');
+charCounter.style.cssText = 'float:right;font-size:.7rem;color:var(--clr-muted);';
+promptInput.parentElement.querySelector('label').appendChild(charCounter);
+promptInput.addEventListener('input', () => {
+  const l = promptInput.value.length;
+  charCounter.textContent = `${l} / 800`;
+  charCounter.style.color = l > 700 ? 'var(--clr-error)' : 'var(--clr-muted)';
+});
+charCounter.textContent = '0 / 800';
