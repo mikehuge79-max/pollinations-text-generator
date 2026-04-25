@@ -260,3 +260,21 @@ copyBtn.addEventListener('click', async () => {
     setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 2000);
   }
 });
+
+// ── Download as .txt ────────────────────────────────────
+downloadBtn.addEventListener('click', () => {
+  const text = textOutput.textContent;
+  if (!text) return;
+
+  const blob     = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  const url      = URL.createObjectURL(blob);
+  const filename = `pollinations-text-${Date.now()}.txt`;
+
+  const a = document.createElement('a');
+  a.href     = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
