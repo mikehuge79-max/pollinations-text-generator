@@ -199,3 +199,38 @@ async function callPollinationsText({ model, systemPrompt, userPrompt, apiKey })
   if (!content) throw new Error('Empty response from API. Please try again.');
   return content;
 }
+
+// ── Generate text ──────────────────────────────────────
+async function generateText() {
+  const prompt    = promptInput.value.trim();
+  const wordCount = parseInt(wordCountInput.value) || 300;
+  const tone      = toneInput.value.trim()      || 'professional';
+  const language  = languageInput.value.trim()  || 'English';
+  const model     = modelSelect.value;
+
+  if (!prompt) { showError('Please enter a prompt before generating.'); return; }
+
+  const apiKey = loadApiKey();
+  if (!apiKey) { clearApiKey(); showSetupScreen(); return; }
+
+  setLoading(true);
+  showOutput('loading');
+
+  try {
+    const systemPrompt = buildSystemPrompt(wordCount, tone, language);
+    const text = await callPollinationsText({ model, systemPrompt, userPrompt: prompt, apiKey });
+
+    textOutput.textContent = text;
+    updateWordCounter(text);
+    showOutput('text');
+  } catch (err) {
+    showError(err.message);
+  } finally {
+    setLoading(false);
+  }
+}
+
+generateBtn.addEventListener('click', generateText);
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && !generateBtn.disabled) generateText();
+});
